@@ -18,12 +18,11 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 
 public class MyServlet extends HttpServlet {
 
@@ -118,11 +117,10 @@ public class MyServlet extends HttpServlet {
             StringEntity entity = new StringEntity(requestData.toString());
             httpPost.setEntity(entity);
 
-            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-                String responseString = EntityUtils.toString(response.getEntity());
-                JSONObject responseJson = new JSONObject(responseString);
-                return responseJson.get("average_age").toString();
-            }
+            String responseString = httpClient.execute(httpPost, response ->
+                    EntityUtils.toString(response.getEntity()));
+            JSONObject responseJson = new JSONObject(responseString);
+            return responseJson.get("average_age").toString();
         }
     }
 }
