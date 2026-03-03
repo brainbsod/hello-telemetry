@@ -27,10 +27,10 @@ resource = Resource.create({ResourceAttributes.SERVICE_NAME: "python-service"})
 # Initialize OpenTelemetry SDK
 
 # Metrics
-metric_exporter = OTLPMetricExporter(endpoint="http://ht-otel-collector:4317", insecure=True)
-metric_reader = PeriodicExportingMetricReader(metric_exporter,export_interval_millis=10000)
-meter_provider = MeterProvider(resource=resource,metric_readers=[metric_reader])
-metrics.set_meter_provider(meter_provider)
+exporter = OTLPMetricExporter(endpoint="http://ht-otel-collector:4317", insecure=True)
+reader = PeriodicExportingMetricReader(exporter,export_interval_millis=10000)
+meterProvider = MeterProvider(resource=resource,metric_readers=[reader])
+metrics.set_meter_provider(meterProvider)
 meter = metrics.get_meter(__name__)
 compute_request_count = meter.create_counter(name='app_compute_request_count', description="Counts the requests to compute-service",unit='1')
 

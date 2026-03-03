@@ -19,12 +19,12 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 
 // OpenTelemetry SDK
 import io.opentelemetry.sdk.OpenTelemetrySdk;
@@ -260,16 +260,14 @@ public class MyServlet extends HttpServlet {
             // GlobalOpenTelemetry.getPropagators().getTextMapPropagator();
             // propagator.inject(context, httpPost, HttpPost::setHeader);
 
-            // Inject the context into the HTTP request headers using
-            // W3CTraceContextPropagator
+            // Inject the context into the HTTP request headers using W3CTraceContextPropagator
             W3CTraceContextPropagator propagator = W3CTraceContextPropagator.getInstance();
             propagator.inject(context, httpPost, HttpPost::setHeader);
 
-            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-                String responseString = EntityUtils.toString(response.getEntity());
-                JSONObject responseJson = new JSONObject(responseString);
-                return responseJson.get("average_age").toString();
-            }
+            String responseString = httpClient.execute(httpPost, response ->
+                    EntityUtils.toString(response.getEntity()));
+            JSONObject responseJson = new JSONObject(responseString);
+            return responseJson.get("average_age").toString();
         } finally {
             computeSpan.end();
         }
