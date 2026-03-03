@@ -1,7 +1,7 @@
-flask==3.1.0
-werkzeug==3.1.0
-opentelemetry-api==1.29.0
-opentelemetry-sdk==1.29.0
-opentelemetry-distro==0.50b0
-opentelemetry-exporter-otlp==1.29.0
-opentelemetry-semantic-conventions==0.50b0
+flask==3.1.3
+werkzeug==3.1.6
+opentelemetry-api==1.39.1
+opentelemetry-sdk==1.39.1
+opentelemetry-distro==0.60b1
+opentelemetry-exporter-otlp==1.39.1
+opentelemetry-semantic-conventions==0.60b1
