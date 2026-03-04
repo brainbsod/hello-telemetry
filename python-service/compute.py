@@ -36,13 +36,10 @@ def compute_average_age():
     
     # Convert Baggage items to a dictionary of attributes
     attributes = {key: value for key, value in baggage_items.items()}
-
     
     # Increment compute counter
-    compute_request_count.add(1,attributes)
+    compute_request_count.add(1,attributes)       
         
-    
-    
     # Start a new span
     with tracer.start_as_current_span("ComputeSpan"):
         
